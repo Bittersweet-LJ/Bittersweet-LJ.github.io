@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>golang基础算法（一）</title>
+      <link href="/2023/02/21/golang%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/"/>
+      <url>/2023/02/21/golang%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Go语言分解质因数"><a href="#Go语言分解质因数" class="headerlink" title="Go语言分解质因数"></a>Go语言分解质因数</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>将一个正整数分解质因数。例如：输入 90，打印出 90 &#x3D; 2 * 3 * 3 * 5。</p><h2 id="题目解决思路"><a href="#题目解决思路" class="headerlink" title="题目解决思路"></a>题目解决思路</h2><p>对 n 进行分解质因数，应先找到一个最小的质数 k，然后按下述步骤完成：</p><ol><li>如果这个质数恰等于 n，则说明分解质因数的过程已经结束，打印出即可。</li><li>如果 n 小于最小的质数 k，不能分解质因数，直接打印 n。</li><li>如果 n &gt; k，但 n 能被 k 整除，则应打印出 k 的值，并用 n 除以 k 的商,作为新的正整数 n，重复执行第一步。</li><li>如果 n 不能被 k 整除，则用 k+1 作为 k 的值，重复执行第一步。</li></ol><h2 id="代码具体实现"><a href="#代码具体实现" class="headerlink" title="代码具体实现"></a>代码具体实现</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line"><span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"><span class="keyword">var</span> n, i <span class="type">int</span> = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;请输入一个数:&quot;</span>)</span><br><span class="line">fmt.Scanf(<span class="string">&quot;%d\n&quot;</span>, &amp;n)</span><br><span class="line">fmt.Printf(<span class="string">&quot;%d = &quot;</span>, n)</span><br><span class="line"><span class="keyword">for</span> i = <span class="number">2</span>; i &lt;= n; i++ &#123;</span><br><span class="line"><span class="keyword">for</span> n != i &#123;</span><br><span class="line"><span class="keyword">if</span> n % i == <span class="number">0</span> &#123;</span><br><span class="line">fmt.Printf(<span class="string">&quot;%d * &quot;</span>, i)</span><br><span class="line">n = n / i</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="keyword">break</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">fmt.Printf(<span class="string">&quot;%d\n&quot;</span>, n)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>运行结果如下</p><blockquote><p>请输入一个数:100<br>100 &#x3D; 2 * 2 * 5 * 5</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> golang </category>
+          
+          <category> 基础算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> golang </tag>
+            
+            <tag> 基础算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>GoLand常用快捷键</title>
       <link href="/2022/11/22/goland%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
       <url>/2022/11/22/goland%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
