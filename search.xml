@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Go函数返回局部变量的指针是否安全?</title>
+      <link href="/2023/02/25/Go%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E6%98%AF%E5%90%A6%E5%AE%89%E5%85%A8/"/>
+      <url>/2023/02/25/Go%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E6%98%AF%E5%90%A6%E5%AE%89%E5%85%A8/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Go函数返回局部变量的指针是否安全"><a href="#Go函数返回局部变量的指针是否安全" class="headerlink" title="Go函数返回局部变量的指针是否安全?"></a>Go函数返回局部变量的指针是否安全?</h1><h2 id="参考解析"><a href="#参考解析" class="headerlink" title="参考解析"></a>参考解析</h2><p>一般来说，局部变量会在函数返回后被销毁，因此被返回的引用就成为了”无所指”的引用，程序会进入未知状态。</p><p>但这在 Go 中是安全的，Go 编译器将会对每个局部变量进行逃逸分析。如果发现局部变量的作用域超出该函数，则不会将内存分配在栈上，而是分配在堆上，因为他们不在栈区，即使释放函数，其内容也不会受影响。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(x, y <span class="type">int</span>)</span></span> *<span class="type">int</span> &#123;</span><br><span class="line">res := <span class="number">0</span></span><br><span class="line">res = x + y</span><br><span class="line"><span class="keyword">return</span> &amp;res</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">fmt.Println(add(<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>这个例子中，函数 <code>add</code> 局部变量 <code>res</code> 发生了逃逸。res作为返回值，在 main 函数中继续使用，因此 res 指向的内存不能够分配在栈上，随着函数结束而回收，只能分配在堆上。</p><p>编译时可以借助选项 <code>-gcflags=-m</code>，查看变量逃逸的情况</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">./main.go:6:2: res escapes to heap:</span><br><span class="line">./main.go:6:2:   flow: ~r2 = &amp;res:</span><br><span class="line">./main.go:6:2:     from &amp;res (address-of) at ./main.go:8:9</span><br><span class="line">./main.go:6:2:     from return &amp;res (return) at ./main.go:8:2</span><br><span class="line">./main.go:6:2: moved to heap: res</span><br><span class="line">./main.go:12:13: ... argument does not escape</span><br><span class="line">0xc0000ae008</span><br></pre></td></tr></table></figure><p><code>res escapes to heap</code> 即表示 <code>res</code> 逃逸到堆上了。</p><h2 id="知识点补充—–go中的堆和栈"><a href="#知识点补充—–go中的堆和栈" class="headerlink" title="知识点补充—–go中的堆和栈"></a>知识点补充—–go中的堆和栈</h2><p>我们定义的变量存放在堆还是栈中？一般是这么来分配的</p><p>堆区（heap） — 一般由程序员分配释放， 若程序员不释放，程序结束时可能由OS回收 。注意它与数据结构中的堆是两回事，分配方式类似于链表</p><p>栈区（stack）— 由编译器自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。</p><h3 id="那么go中的全局变量和局部变量都是放在哪里呢？"><a href="#那么go中的全局变量和局部变量都是放在哪里呢？" class="headerlink" title="那么go中的全局变量和局部变量都是放在哪里呢？"></a>那么go中的全局变量和局部变量都是放在哪里呢？</h3><h4 id="1-变量的声明周期"><a href="#1-变量的声明周期" class="headerlink" title="1. 变量的声明周期"></a>1. 变量的声明周期</h4><p>生命周期是指程序执行过程中变量存在的时间段。</p><p>（1）包变量(全局变量) 一直常驻在内存中直到程序的结束，然后被系统垃圾回收，也就是说包变量的生命周期是整个程序的执行时间</p><p>（2）局部变量 在函数中定义的变量，它有一个动态的生命周期：每次执行的时候就创建一个新的实体，一直生存到没有人使用(例如没有外部指针指向它，函数退出的时候没有路径访问到这个变量)这个时候它占用的空间就会被回收</p><h4 id="2-堆和栈的分配"><a href="#2-堆和栈的分配" class="headerlink" title="2. 堆和栈的分配"></a>2. 堆和栈的分配</h4><p><a href="https://zhuanlan.zhihu.com/p/523195006">如何判断 Golang 变量是分配在栈（stack）上还是堆（heap）上？</a></p><p>Go语言区别于C&#x2F;C++，虽然变量申请在堆空间上，但是它有自动回收垃圾的功能，所以这些堆地址空间也无需我们手动回收，系统会在需要释放的时刻自动进行垃圾回收。</p><p><strong>总结：Golang 变量存储在堆上还是栈上由内部实现决定而和具体的语法没有关系。非指针小对象通常保存在栈上，大对象保存在堆上。至于指针保存在堆上还是栈上，要进行逃逸分析</strong></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> golang </category>
+          
+          <category> 思考题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> golang </tag>
+            
+            <tag> 思考题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>golang基础算法（一）</title>
       <link href="/2023/02/21/golang%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/"/>
       <url>/2023/02/21/golang%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/</url>
