@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Go中channel有什么特点</title>
+      <link href="/2023/02/26/Go%E4%B8%ADchannel%E6%9C%89%E4%BB%80%E4%B9%88%E7%89%B9%E7%82%B9/"/>
+      <url>/2023/02/26/Go%E4%B8%ADchannel%E6%9C%89%E4%BB%80%E4%B9%88%E7%89%B9%E7%82%B9/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Go-channel有什么特点？"><a href="#Go-channel有什么特点？" class="headerlink" title="Go channel有什么特点？"></a>Go channel有什么特点？</h1><h2 id="参考解析"><a href="#参考解析" class="headerlink" title="参考解析"></a>参考解析</h2><p>channel有2种类型：无缓冲、有缓冲</p><p>channel有3种模式：写操作模式（单向通道）、读操作模式（单向通道）、读写操作模式（双向通道）</p><table><thead><tr><th align="left"></th><th align="left">写操作模式</th><th align="left">读操作模式</th><th align="left">读写操作模式</th></tr></thead><tbody><tr><td align="left">创建</td><td align="left">make(chan&lt;- int)</td><td align="left">make(&lt;-chan int)</td><td align="left">make(chan int)</td></tr></tbody></table><p>channel有3种状态：未初始化、正常、关闭</p><table><thead><tr><th align="left"></th><th align="left">未初始化</th><th align="left">关闭</th><th align="left">正常</th></tr></thead><tbody><tr><td align="left">关闭</td><td align="left">panic</td><td align="left">panic</td><td align="left">正常关闭</td></tr><tr><td align="left">发送</td><td align="left">永远阻塞导致死锁</td><td align="left">panic</td><td align="left">阻塞或者成功发送</td></tr><tr><td align="left">接收</td><td align="left">永远阻塞导致死锁</td><td align="left">缓冲区为空则为零值, 否则可以继续读</td><td align="left">阻塞或者成功接收</td></tr></tbody></table><p><strong>注意点</strong>：</p><ol><li>一个 channel不能多次关闭，会导致painc</li><li>如果多个 goroutine 都监听同一个 channel，那么 channel 上的数据都<strong>可能随机被某一个 goroutine 取走进行消费</strong></li><li>如果多个 goroutine 监听同一个 channel，如果这个 channel 被关闭，则所有 goroutine <strong>都能收到退出信号</strong></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> golang </category>
+          
+          <category> 思考题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> golang </tag>
+            
+            <tag> 思考题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Go内置函数make和new的区别?</title>
       <link href="/2023/02/26/Go%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0make%E5%92%8Cnew%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
       <url>/2023/02/26/Go%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0make%E5%92%8Cnew%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
