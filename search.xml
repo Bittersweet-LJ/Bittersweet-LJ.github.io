@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Linux下Docker安装与使用</title>
+      <link href="/2023/02/28/Linux%E4%B8%8BDocker%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
+      <url>/2023/02/28/Linux%E4%B8%8BDocker%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Linux下Docker安装与使用"><a href="#Linux下Docker安装与使用" class="headerlink" title="Linux下Docker安装与使用"></a>Linux下Docker安装与使用</h1><h2 id="安装-参考链接："><a href="#安装-参考链接：" class="headerlink" title="安装 参考链接："></a>安装 参考链接：</h2><p>[阿里云服务器安装Docker并部署nginx、jdk、redis、mysql - CHAP_CXY - 博客园 (cnblogs.com)](<a href="https://www.cnblogs.com/chap-cxy/p/14841618.html#:~:text=%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85Docker%E5%B9%B6%E9%83%A8%E7%BD%B2nginx%E3%80%81jdk%E3%80%81redis%E3%80%81mysql">https://www.cnblogs.com/chap-cxy/p/14841618.html#:~:text=阿里云服务器安装Docker并部署nginx、jdk、redis、mysql</a> 一、安装Docker 1、安装Docker的依赖库 yum install -y yum-utils,device-mapper-persistent-data lvm2 2、添加Docker CE的软件源信息 yum-config-manager –add-repo http%3A%2F%2Fmirrors.aliyun.com%2Fdocker-ce)</p><p><a href="https://help.aliyun.com/document_detail/187598.html">部署并使用Docker（CentOS 8） (aliyun.com)</a></p><p><a href="https://zhuanlan.zhihu.com/p/445854188">全网最新最全最详细 linux安装docker方式 - 知乎 (zhihu.com)</a></p><p><a href="https://blog.csdn.net/DelevinData/article/details/101905052">docker三种安装方式_海角七号邮局的博客-CSDN博客</a></p><h2 id="使用："><a href="#使用：" class="headerlink" title="使用："></a>使用：</h2><p>（展示部分命令）参考：<a href="https://help.aliyun.com/document_detail/187598.html">部署并使用Docker（CentOS 8） (aliyun.com)</a></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker     #运行Docker守护进程</span><br><span class="line">systemctl stop docker      #停止Docker守护进程</span><br><span class="line">systemctl restart docker   #重启Docker守护进程</span><br><span class="line">systemctl enable docker    #设置Docker开机自启动</span><br><span class="line">systemctl status docker    #查看Docker的运行状态</span><br></pre></td></tr></table></figure><h3 id="修改镜像标签"><a href="#修改镜像标签" class="headerlink" title="修改镜像标签"></a>修改镜像标签</h3><p>由于镜像名称较长，您可以修改镜像标签以便记忆区分。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag registry.cn-hangzhou.aliyuncs.com/lxepoo/apache-php5:latest aliweb:v1</span><br></pre></td></tr></table></figure><h3 id="新建并运行容器"><a href="#新建并运行容器" class="headerlink" title="新建并运行容器"></a>新建并运行容器</h3><p>e1abc是执行<code>docker images</code>命令查询到的<strong>ImageId</strong>，使用<code>docker run</code>命令新建容器。</p><p>退出容器。使用<code>exit</code>命令退出当前容器。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it e1abc**** /bin/bash</span><br></pre></td></tr></table></figure><p><code>run</code>命令加上<code>–d</code>参数可以在后台运行容器，<code>--name</code>指定容器命名为apache。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name apache e1abc****</span><br></pre></td></tr></table></figure><p>进入后台运行的容器。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it apache /bin/bash</span><br></pre></td></tr></table></figure><p>将容器做成镜像，命令的参数说明：<code>docker commit &lt;容器ID或容器名&gt; [&lt;仓库名&gt;[:&lt;标签&gt;]]</code>。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit containerID/containerName repository:tag</span><br></pre></td></tr></table></figure><p>例如：docker commit 4c8066cd8**** apachephp:v1</p><p>运行容器并将宿主机的8080端口映射到容器里去，就可以通过ECS实例IP地址加8080端口访问测试</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 8080:80 apachephp:v1</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Docker </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Go中channel有什么特点</title>
       <link href="/2023/02/26/Go%E4%B8%ADchannel%E6%9C%89%E4%BB%80%E4%B9%88%E7%89%B9%E7%82%B9/"/>
       <url>/2023/02/26/Go%E4%B8%ADchannel%E6%9C%89%E4%BB%80%E4%B9%88%E7%89%B9%E7%82%B9/</url>
